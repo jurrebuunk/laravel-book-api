@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('bio')->nullable();
             $table->timestamps();
-            $table->softDeletes(); // Voor restore/functies
+            $table->softDeletes();
         });
     }
 

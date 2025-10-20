@@ -21,7 +21,7 @@ class BookController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'genre_id' => 'required|exists:genres,id',
-            'author_id' => 'required|exists:authors,id',  // Author koppeling
+            'author_id' => 'required|exists:authors,id',
             'publication_date' => 'nullable|date',
         ]);
 
@@ -41,7 +41,7 @@ class BookController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'genre_id' => 'required|exists:genres,id',
-            'author_id' => 'required|exists:authors,id',  // Author koppeling
+            'author_id' => 'required|exists:authors,id',
             'publication_date' => 'nullable|date',
         ]);
 

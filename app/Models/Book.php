@@ -14,7 +14,7 @@ class Book extends Model
         'title',
         'description',
         'genre_id',
-        'author_id',       // voeg dit toe
+        'author_id',
         'publication_date',
     ];
 
