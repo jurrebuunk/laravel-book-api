@@ -63,9 +63,9 @@ class BookController extends Controller
     }
 
     // PATCH /api/books/{id}/restore
-    public function restore($id)
+    public function restore($book)
     {
-        $book = Book::onlyTrashed()->findOrFail($id);
+        $book = Book::onlyTrashed()->findOrFail($book);
         $book->restore();
         return $book->load(['genre', 'author']);
     }

@@ -15,11 +15,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-    Route::apiResource('books', BookController::class);
+    // Eerst de “speciale” book routes
     Route::get('books/trashed', [BookController::class, 'trashed']);
-    Route::patch('books/{id}/restore', [BookController::class, 'restore']);
+    Route::patch('books/{book}/restore', [BookController::class, 'restore']);
+
+    // Daarna pas de resource
+    Route::apiResource('books', BookController::class);
 
     Route::apiResource('genres', GenreController::class);
-
     Route::apiResource('authors', AuthorController::class);
 });
