@@ -8,9 +8,10 @@ use Illuminate\Http\Response;
 
 class AuthorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Author::all());
+        $perPage = $request->query('per_page', 10);
+        return response()->json(Author::paginate($perPage));
     }
 
     public function store(Request $request)
@@ -48,3 +49,4 @@ class AuthorController extends Controller
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
+
