@@ -9,19 +9,29 @@ use App\Http\Controllers\AuthController;
 // Open routes
 Route::post('/auth/login', [AuthController::class, 'login']);
 
-// Beveiligde routes
+// Protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/auth/me', [AuthController::class, 'me']);
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    // Me and logout
+    Route::get('auth/me', [AuthController::class, 'me']);
+    Route::post('auth/logout', [AuthController::class, 'logout']);
 
-    // Eerst de “speciale” book routes
-    Route::get('books/trashed', [BookController::class, 'trashed']);
-    Route::patch('books/{book}/restore', [BookController::class, 'restore']);
+    // Admin-only routes
+    Route::middleware('role:admin')->group(function () {
+        // Special book routes
+        Route::get('books/trashed', [BookController::class, 'trashed']);
+        Route::patch('books/{book}/restore', [BookController::class, 'restore']);
 
-    // Daarna pas de resource
-    Route::apiResource('books', BookController::class);
+        // Full resources
+        Route::apiResource('books', BookController::class);
+        Route::apiResource('genres', GenreController::class);
+        Route::apiResource('authors', AuthorController::class);
+    });
 
-    Route::apiResource('genres', GenreController::class);
-    Route::apiResource('authors', AuthorController::class);
+    // User and admin read-only
+    Route::middleware('role:admin|user')->group(function () {
+        Route::get('books', [BookController::class, 'index']);
+        Route::get('books/{book}', [BookController::class, 'show']);
+    });
+
 });

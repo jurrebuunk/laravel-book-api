@@ -7,22 +7,29 @@ use App\Models\User;
 use App\Models\Author;
 use App\Models\Genre;
 use App\Models\Book;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        // Create a specific test user
+        // Create admin user
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('Welkom01'), // Will be hashed automatically
+            'role' => 'admin',
         ]);
 
-        // Optional: create additional random users
-        User::factory(5)->create();
+        // Optionally, create a normal user
+        User::factory()->create([
+            'name' => 'Normal User',
+            'email' => 'user@example.com',
+            'password' => 'password',
+            'role' => 'user',
+        ]);
 
-        // Other data
+        // Other seeders
         Author::factory(5)->create();
         Genre::factory(5)->create();
         Book::factory(20)->create();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -21,6 +22,8 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+
+        // Ensure HasApiTokens trait exists on User model
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
@@ -32,7 +35,7 @@ class AuthController extends Controller
     // GET /auth/me
     public function me(Request $request)
     {
-        return $request->user();
+        return response()->json($request->user());
     }
 
     // POST /auth/logout
