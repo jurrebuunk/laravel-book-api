@@ -13,13 +13,31 @@ class BookController extends Controller
     // GET /api/books
     public function index(Request $request)
     {
-        $perPage = $request->query('per_page', 10); // default 10 per page
+        $perPage = $request->query('per_page', 10); // standaard 10 per pagina
         $search = $request->query('search');
+        $sortBy = $request->query('sort_by', 'title'); // 'title' of 'publication_date'
+        $sortOrder = $request->query('sort_order', 'asc'); // 'asc' of 'desc'
+        $genreIds = $request->query('genres'); // kan een array of comma-separated string zijn
 
         $query = Book::with(['genre', 'author']);
 
+        // Zoeken op titel
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Filteren op genres
+        if ($genreIds) {
+            if (is_string($genreIds)) {
+                $genreIds = explode(',', $genreIds);
+            }
+            $genreIds = array_slice($genreIds, 0, 4); // maximaal 4
+            $query->whereIn('genre_id', $genreIds);
+        }
+
+        // Sorteren
+        if (in_array($sortBy, ['title', 'publication_date']) && in_array($sortOrder, ['asc', 'desc'])) {
+            $query->orderBy($sortBy, $sortOrder);
         }
 
         return $query->paginate($perPage);
