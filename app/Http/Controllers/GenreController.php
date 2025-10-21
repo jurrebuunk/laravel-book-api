@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 class GenreController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Genre::all();
+        $perPage = $request->query('per_page', 10);
+        return Genre::paginate($perPage);
     }
 
     public function store(Request $request)

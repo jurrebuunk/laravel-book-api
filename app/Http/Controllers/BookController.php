@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BookController extends Controller
 {
     // GET /api/books
-    public function index()
+    public function index(Request $request)
     {
-        return Book::with(['genre', 'author'])->get();
+        $perPage = $request->query('per_page', 10);
+        return Book::with(['genre', 'author'])->paginate($perPage);
     }
 
     // POST /api/books
@@ -57,9 +57,10 @@ class BookController extends Controller
     }
 
     // GET /api/books/trashed
-    public function trashed()
+    public function trashed(Request $request)
     {
-        return Book::onlyTrashed()->with(['genre', 'author'])->get();
+        $perPage = $request->query('per_page', 10);
+        return Book::onlyTrashed()->with(['genre', 'author'])->paginate($perPage);
     }
 
     // PATCH /api/books/{id}/restore
@@ -70,3 +71,4 @@ class BookController extends Controller
         return $book->load(['genre', 'author']);
     }
 }
+
