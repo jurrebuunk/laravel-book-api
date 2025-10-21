@@ -4,14 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BookController extends Controller
 {
+    use SoftDeletes;
+
     // GET /api/books
     public function index(Request $request)
     {
-        $perPage = $request->query('per_page', 10);
-        return Book::with(['genre', 'author'])->paginate($perPage);
+        $perPage = $request->query('per_page', 10); // default 10 per page
+        $search = $request->query('search');
+
+        $query = Book::with(['genre', 'author']);
+
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        return $query->paginate($perPage);
     }
 
     // POST /api/books
@@ -57,10 +68,9 @@ class BookController extends Controller
     }
 
     // GET /api/books/trashed
-    public function trashed(Request $request)
+    public function trashed()
     {
-        $perPage = $request->query('per_page', 10);
-        return Book::onlyTrashed()->with(['genre', 'author'])->paginate($perPage);
+        return Book::onlyTrashed()->with(['genre', 'author'])->get();
     }
 
     // PATCH /api/books/{id}/restore
@@ -71,4 +81,3 @@ class BookController extends Controller
         return $book->load(['genre', 'author']);
     }
 }
-
